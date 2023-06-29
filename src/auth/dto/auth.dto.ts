@@ -1,10 +1,16 @@
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
+
+enum Role {
+  user = 'user',
+  org = 'org',
+}
 
 export class SignUpDto {
   @IsString()
@@ -18,6 +24,10 @@ export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @IsEnum(Role, { message: 'role  must be a valid role type' })
+  @IsOptional()
+  role: string;
 }
 
 export class SignInDto {

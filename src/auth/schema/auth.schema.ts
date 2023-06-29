@@ -26,6 +26,14 @@ export class User {
   @Prop({ type: Boolean, default: false })
   isActive: boolean;
 
+  @Prop({
+    type: String,
+    default: 'user',
+    lowercase: true,
+    enum: ['user', 'org'],
+  })
+  role: string;
+
   @Prop({ type: String })
   refreshToken: string;
 
