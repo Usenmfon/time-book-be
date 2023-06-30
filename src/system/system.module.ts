@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './modules';
+import { ResourceModule } from './modules';
 
-@Module({ imports: [UserModule] })
+@Module({ imports: [ResourceModule] })
 export class SystemModule {}

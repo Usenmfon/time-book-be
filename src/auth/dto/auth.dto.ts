@@ -15,7 +15,7 @@ enum Role {
 export class SignUpDto {
   @IsString()
   @IsOptional()
-  fullname?: string;
+  name?: string;
 
   @IsEmail()
   @IsNotEmpty()

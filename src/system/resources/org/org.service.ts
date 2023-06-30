@@ -15,11 +15,11 @@ export class OrgService {
 
   async getOrg(id: Types.ObjectId) {
     return this.OrgSchema.findOne({ _id: id })
-      .then(async (user) => {
-        if (!user) {
-          throw new ServiceException({ error: 'User profile not found' });
+      .then(async (org) => {
+        if (!org) {
+          throw new ServiceException({ error: 'Organization not found' });
         }
-        return user;
+        return org;
       })
       .catch((e) => {
         throw new ServiceException({ error: parseDBError(e) });
@@ -32,8 +32,8 @@ export class OrgService {
       new: true,
       upsert: true,
     })
-      .then(async (user) => {
-        return user;
+      .then(async (org) => {
+        return org;
       })
       .catch((e) => {
         throw new ServiceException({ error: parseDBError(e) });

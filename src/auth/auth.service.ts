@@ -28,6 +28,7 @@ export class AuthService {
         if (users.length) {
           throw new ServiceException({ error: 'email already exist' });
         }
+        dto.role = 'org';
 
         const user = new this.UserSchema({ ...dto });
         const password = await argon.hash(user.password);
@@ -52,8 +53,12 @@ export class AuthService {
         }
 
         const user = new this.UserSchema({ ...dto });
+        const eventObject = new NewUserEvent();
+        eventObject.user = user;
         await user.save();
-        return user;
+        this.eventEmitter.emit('user.new', eventObject);
+
+        return this.signToken(user);
       })
       .catch((e) => {
         throw new ServiceException({ error: parseDBError(e) });

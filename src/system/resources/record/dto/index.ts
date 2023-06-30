@@ -1,1 +1,2 @@
-export * from './update.org.dto';
+export * from './update.record.dto';
+export * from './create.record.dto';

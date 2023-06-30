@@ -1,27 +1,30 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class UpdateProfileDto {
-  @IsNotEmpty()
+  @IsOptional()
   user?: Types.ObjectId;
 
+  @IsOptional()
+  org?: Types.ObjectId;
+
   @IsEmail()
-  @IsNotEmpty()
-  email: string;
+  @IsOptional()
+  email?: string;
 
   @IsString()
-  @IsNotEmpty()
-  fullname: string;
+  @IsOptional()
+  fullname?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
+  org_code?: string;
+
+  @IsString()
+  @IsOptional()
   location?: string;
 
   @IsString()
   @IsOptional()
-  avatar?: string;
-
-  @IsString()
-  @IsOptional()
-  avatar_id?: string;
+  dob?: string;
 }

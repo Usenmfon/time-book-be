@@ -1,27 +1,27 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class UpdateOrgDto {
-  @IsNotEmpty()
+  @IsOptional()
   user?: Types.ObjectId;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   org_code: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   longitude: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   latitude: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   location: string;
 }
