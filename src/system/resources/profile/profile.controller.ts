@@ -12,6 +12,7 @@ export class ProfileController {
 
   @Get()
   async getProfile(@GetAuthUser() user: IAuthUser) {
+    console.log(user);
     return this.profileService.getProfile(user.id);
   }
 
@@ -21,5 +22,13 @@ export class ProfileController {
     @Body() dto: UpdateProfileDto,
   ) {
     return this.profileService.updateProfile(user.id, dto);
+  }
+
+  @Put('/code')
+  async updateCode(
+    @GetAuthUser() user: IAuthUser,
+    @Body() dto: UpdateProfileDto,
+  ) {
+    return this.profileService.updateCode(user.id, dto);
   }
 }

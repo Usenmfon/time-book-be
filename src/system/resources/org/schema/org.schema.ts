@@ -17,11 +17,11 @@ export class Org {
   })
   name: string;
 
-  @Prop({ type: String })
-  latitude: string;
+  @Prop({ type: Number })
+  latitude: number;
 
-  @Prop({ type: String })
-  longitude: string;
+  @Prop({ type: Number })
+  longitude: number;
 
   @Prop({ type: String })
   location: string;

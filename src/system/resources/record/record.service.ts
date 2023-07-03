@@ -6,6 +6,7 @@ import { CreateRecordDto, UpdateRecordDto } from './dto';
 import { ServiceException } from 'src/helper/exceptions/exceptions/service.layer.exception';
 import { parseDBError } from 'src/helper/main';
 import { Profile, ProfileDocument } from '../profile/schema/profile.schema';
+import { Org, OrgDocument } from '../org/schema/org.schema';
 
 @Injectable()
 export class RecordService {
@@ -13,6 +14,7 @@ export class RecordService {
     @InjectModel(Record.name)
     private RecordSchema: Model<RecordDocument>,
     @InjectModel(Profile.name) private ProfileSchema: Model<ProfileDocument>,
+    @InjectModel(Org.name) private OrgSchema: Model<OrgDocument>,
   ) {}
 
   async getRecord(id: Types.ObjectId) {
@@ -30,23 +32,29 @@ export class RecordService {
 
   async createRecord(id: Types.ObjectId, dto) {
     try {
-      await this.ProfileSchema.findById(id)
-        .then(async (profile) => {
-          if (!profile) {
-            throw new ServiceException({ error: 'Profile not found' });
-          }
-          dto.org = profile.org;
-        })
+      const user = await this.ProfileSchema.findById(id)
+        .populate([{ path: 'org', select: ['latitude', 'longitude'] }])
         .catch((e) => {
           throw new ServiceException({ error: parseDBError(e) });
         });
 
-      dto.sign_in = new Date();
-      dto.user = id;
-      const record = new this.RecordSchema({ ...dto });
-      await record.save();
+      // const org = await this.OrgSchema.findById(a.org);
+      if (
+        user.org.latitude === dto.latitude &&
+        user.org.longitude === dto.longitude
+      ) {
+        dto.org = user.org;
 
-      return record;
+        dto.sign_in = new Date();
+        dto.user = id;
+        const record = new this.RecordSchema({ ...dto });
+        await record.save();
+
+        return record;
+      }
+      throw new ServiceException({
+        error: 'You are not currently in the organization',
+      });
     } catch (e) {
       throw new ServiceException({ error: parseDBError(e) });
     }

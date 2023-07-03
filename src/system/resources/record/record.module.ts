@@ -3,13 +3,13 @@ import { RecordService } from './record.service';
 import { RecordController } from './record.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Record, RecordSchema } from './schema/record.schema';
-import { User, UserSchema } from 'src/auth/schema/auth.schema';
 import { Profile, ProfileSchema } from '../profile/schema/profile.schema';
+import { Org, OrgSchema } from '../org/schema/org.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
+      { name: Org.name, schema: OrgSchema },
       { name: Record.name, schema: RecordSchema },
       { name: Profile.name, schema: ProfileSchema },
     ]),
