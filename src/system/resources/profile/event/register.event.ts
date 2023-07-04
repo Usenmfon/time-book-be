@@ -11,7 +11,7 @@ export class ProfileEventListener {
   handleCreatedEvent({ user }: NewUserEvent) {
     const dto: UpdateProfileDto = {
       email: user.email,
-      fullname: user.fullname,
+      name: user.name,
     };
 
     return this.profileService.updateProfile(user.id, dto).catch((e) => {

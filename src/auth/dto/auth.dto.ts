@@ -54,7 +54,7 @@ export class SignUpHookDto {
     created_at?: string;
     email?: string;
     email_verified?: string;
-    fullname?: string;
+    name?: string;
     last_password_reset?: string;
     updated_at?: string;
   };

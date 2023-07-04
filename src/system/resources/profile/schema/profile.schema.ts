@@ -19,7 +19,7 @@ export class Profile {
   email: string;
 
   @Prop({ type: String })
-  fullname: string;
+  name: string;
 
   @Prop({ type: String })
   dob: string;

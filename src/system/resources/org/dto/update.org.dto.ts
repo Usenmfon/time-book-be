@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class UpdateOrgDto {
@@ -10,12 +10,12 @@ export class UpdateOrgDto {
   org_code: string;
 
   @IsOptional()
-  @IsString()
-  longitude: string;
+  @IsNumber()
+  longitude: number;
 
   @IsOptional()
-  @IsString()
-  latitude: string;
+  @IsNumber()
+  latitude: number;
 
   @IsString()
   @IsOptional()

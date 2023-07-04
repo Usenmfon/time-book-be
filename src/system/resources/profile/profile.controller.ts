@@ -12,7 +12,6 @@ export class ProfileController {
 
   @Get()
   async getProfile(@GetAuthUser() user: IAuthUser) {
-    console.log(user);
     return this.profileService.getProfile(user.id);
   }
 
