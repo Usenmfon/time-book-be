@@ -10,6 +10,11 @@ import { CreateRecordDto, UpdateRecordDto } from './dto';
 export class RecordController {
   constructor(private readonly recordService: RecordService) {}
 
+  @Get('/all')
+  async getAllRecords(@GetAuthUser() user: IAuthUser) {
+    return this.recordService.getAllRecords(user.id);
+  }
+
   @Get()
   async getRecord(@GetAuthUser() user: IAuthUser) {
     return this.recordService.getRecord(user.id);

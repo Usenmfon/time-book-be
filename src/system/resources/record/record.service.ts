@@ -18,10 +18,25 @@ export class RecordService {
   ) {}
 
   async getRecord(id: Types.ObjectId) {
-    return this.RecordSchema.findOne({ _id: id })
+    // console.log(id)
+    return this.RecordSchema.findOne({ user: id })
       .then(async (record) => {
+        // console.log(record);
         if (!record) {
           throw new ServiceException({ error: 'Record profile not found' });
+        }
+        return record;
+      })
+      .catch((e) => {
+        throw new ServiceException({ error: parseDBError(e) });
+      });
+  }
+
+  async getAllRecords(id: Types.ObjectId) {
+    return this.RecordSchema.find({ org: id })
+      .then(async (record) => {
+        if (!record) {
+          throw new ServiceException({ error: 'Records not found' });
         }
         return record;
       })
@@ -43,6 +58,7 @@ export class RecordService {
         user.org.latitude === dto.latitude &&
         user.org.longitude === dto.longitude
       ) {
+        // console.log(user.org._id);
         dto.org = user.org;
 
         dto.sign_in = new Date();

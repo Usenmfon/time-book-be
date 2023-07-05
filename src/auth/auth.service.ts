@@ -28,7 +28,6 @@ export class AuthService {
         if (users.length) {
           throw new ServiceException({ error: 'email already exist' });
         }
-        dto.role = 'org';
 
         const user = new this.UserSchema({ ...dto });
         const password = await argon.hash(user.password);
@@ -92,7 +91,7 @@ export class AuthService {
     const payload = {
       id: user._id,
       email: user.email,
-      type: user.type,
+      role: user.role,
     };
 
     const secret = this.config.get('JWT_SECRET');
