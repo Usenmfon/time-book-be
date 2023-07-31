@@ -6,7 +6,7 @@ export class UpdateProfileDto {
   user?: Types.ObjectId;
 
   @IsOptional()
-  org?: Types.ObjectId;
+  org?: string;
 
   @IsEmail()
   @IsOptional()

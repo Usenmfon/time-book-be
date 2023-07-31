@@ -6,6 +6,7 @@ import { Profile, ProfileSchema } from './schema/profile.schema';
 import { ProfileEventListener } from './event/register.event';
 import { User, UserSchema } from 'src/auth/schema/auth.schema';
 import { Org, OrgSchema } from '../org/schema/org.schema';
+import { LinkAccountEventListener } from './event/code.event';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { Org, OrgSchema } from '../org/schema/org.schema';
     ]),
   ],
   controllers: [ProfileController],
-  providers: [ProfileEventListener, ProfileService],
+  providers: [ProfileEventListener, LinkAccountEventListener, ProfileService],
 })
 export class ProfileModule {}

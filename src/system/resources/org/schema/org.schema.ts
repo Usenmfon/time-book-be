@@ -17,14 +17,8 @@ export class Org {
   })
   name: string;
 
-  @Prop({ type: Number })
-  latitude: number;
-
-  @Prop({ type: Number })
-  longitude: number;
-
-  @Prop({ type: String })
-  location: string;
+  @Prop({ type: Array })
+  location: [number, number];
 }
 
 export type OrgDocument = HydratedDocument<Org>;

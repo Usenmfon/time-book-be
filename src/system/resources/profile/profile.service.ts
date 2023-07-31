@@ -52,7 +52,8 @@ export class ProfileService {
           if (!user) {
             throw new ServiceException({ error: 'organization not found' });
           }
-          dto.org = user._id;
+          const orgId = user._id.toString();
+          dto.org = orgId;
         },
       );
 
@@ -65,10 +66,7 @@ export class ProfileService {
 
       dto.user = id;
 
-      return this.ProfileSchema.findOneAndUpdate({ _id: id }, dto, {
-        new: true,
-        upsert: true,
-      })
+      return this.ProfileSchema.findOneAndUpdate({ _id: id }, dto)
         .then(async (user) => {
           return user;
         })

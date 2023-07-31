@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -28,6 +29,23 @@ export class SignUpDto {
   @IsEnum(Role, { message: 'role  must be a valid role type' })
   @IsOptional()
   role: string;
+
+  @IsOptional()
+  @IsString()
+  org_code?: string;
+
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+
+  // @IsObject()
+  // location: {
+  //   coordinates: [];
+  // };
 }
 
 export class SignInDto {

@@ -10,8 +10,9 @@ import { SignInDto, SignUpDto } from './dto';
 import { ServiceException } from 'src/helper/exceptions/exceptions/service.layer.exception';
 import { parseDBError } from 'src/helper/main';
 import { bruteForceCheck } from './helper/auth.helper';
-import { NewUserEvent } from './entities/event.entity';
+import { NewOrgEvent, NewUserEvent } from './entities/event.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { codeGenerator } from './helper/org.helper';
 
 @Injectable()
 export class AuthService {
@@ -32,10 +33,28 @@ export class AuthService {
         const user = new this.UserSchema({ ...dto });
         const password = await argon.hash(user.password);
         user.password = password;
+
         const eventObject = new NewUserEvent();
         eventObject.user = user;
         await user.save();
         this.eventEmitter.emit('user.new', eventObject);
+
+        if (user.role === 'org') {
+          const orgCode = await codeGenerator(user);
+
+          const orgObject = new NewOrgEvent();
+          orgObject.org = {
+            org_code: orgCode,
+            location: [dto.longitude, dto.latitude],
+            user: user.id,
+            name: user.name,
+          };
+          this.eventEmitter.emit('org.new', orgObject);
+        } else {
+          const codeObject = new NewUserEvent();
+          codeObject.user = { code: dto.org_code, id: user.id };
+          this.eventEmitter.emit('code.new', codeObject);
+        }
 
         return this.signToken(user);
       })

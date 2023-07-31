@@ -4,6 +4,7 @@ import { OrgController } from './org.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Org, OrgSchema } from './schema/org.schema';
 import { User, UserSchema } from 'src/auth/schema/auth.schema';
+import { OrgEventListener } from './event/org.event';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { User, UserSchema } from 'src/auth/schema/auth.schema';
     ]),
   ],
   controllers: [OrgController],
-  providers: [OrgService],
+  providers: [OrgEventListener, OrgService],
 })
 export class OrgModule {}

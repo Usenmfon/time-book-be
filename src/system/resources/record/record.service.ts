@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Record, RecordDocument } from './schema/record.schema';
 import { Model, Types } from 'mongoose';
-import { CreateRecordDto, UpdateRecordDto } from './dto';
+import { UpdateRecordDto } from './dto';
 import { ServiceException } from 'src/helper/exceptions/exceptions/service.layer.exception';
 import { parseDBError } from 'src/helper/main';
 import { Profile, ProfileDocument } from '../profile/schema/profile.schema';
@@ -33,6 +33,7 @@ export class RecordService {
   }
 
   async getAllRecords(id: Types.ObjectId) {
+    console.log(id);
     return this.RecordSchema.find({ org: id })
       .then(async (record) => {
         if (!record) {
@@ -48,17 +49,32 @@ export class RecordService {
   async createRecord(id: Types.ObjectId, dto) {
     try {
       const user = await this.ProfileSchema.findById(id)
-        .populate([{ path: 'org', select: ['latitude', 'longitude'] }])
+        .populate([{ path: 'org', select: ['location'] }])
         .catch((e) => {
           throw new ServiceException({ error: parseDBError(e) });
         });
-
+      // console.log(dto);
+      // console.log('user=>', user);
+      // const locaiton = user.org.location;
+      // const org = await this.OrgSchema.find({
+      //   location: {
+      //     $near: {
+      //       $geometry: {
+      //         type: 'Point',
+      //         coordinates: [dto.longitude, dto.latitude],
+      //       },
+      //       $minDistance: 1000,
+      //       $maxDistance: 5000,
+      //     },
+      //   },
+      // });
+      // console.log(org);
       // const org = await this.OrgSchema.findById(a.org);
+
       if (
-        user.org.latitude === dto.latitude &&
-        user.org.longitude === dto.longitude
+        user.org.location[0] === dto.longitude &&
+        user.org.location[1] === dto.latitude
       ) {
-        // console.log(user.org._id);
         dto.org = user.org;
 
         dto.sign_in = new Date();

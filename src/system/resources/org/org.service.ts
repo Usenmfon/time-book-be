@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { UpdateOrgDto } from './dto';
 import { ServiceException } from 'src/helper/exceptions/exceptions/service.layer.exception';
 import { parseDBError } from 'src/helper/main';
+import { codeGenerator } from 'src/auth/helper/org.helper';
 
 @Injectable()
 export class OrgService {
@@ -28,6 +29,16 @@ export class OrgService {
 
   async updateOrg(id: Types.ObjectId, dto: UpdateOrgDto) {
     dto.user = id;
+    await this.OrgSchema.find({
+      org_code: dto.org_code,
+    }).then(async (code) => {
+      if (code.length) {
+        dto.org_code = await codeGenerator(code[0]);
+      }
+    });
+
+    await this.OrgSchema.collection.createIndex({ location: '2dsphere' });
+
     return this.OrgSchema.findOneAndUpdate({ _id: id }, dto, {
       new: true,
       upsert: true,
