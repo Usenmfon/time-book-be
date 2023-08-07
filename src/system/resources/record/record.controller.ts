@@ -15,6 +15,11 @@ export class RecordController {
     return this.recordService.getAllRecords(user.id);
   }
 
+  @Get('/organization')
+  async getAnalysis(@GetAuthUser() user: IAuthUser) {
+    return this.recordService.getAnalysis(user.id);
+  }
+
   @Get()
   async getRecord(@GetAuthUser() user: IAuthUser) {
     return this.recordService.getRecord(user.id);

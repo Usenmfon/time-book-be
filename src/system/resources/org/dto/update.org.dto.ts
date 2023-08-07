@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsNumber,
-  IsObject,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class UpdateOrgDto {
@@ -27,7 +21,10 @@ export class UpdateOrgDto {
   @IsOptional()
   name?: string;
 
-  @IsArray()
+  @IsObject()
   @IsOptional()
-  location?: [number, number];
+  location?: {
+    type: string;
+    coordinates: [number, number];
+  };
 }

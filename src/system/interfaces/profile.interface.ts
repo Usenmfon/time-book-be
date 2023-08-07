@@ -11,5 +11,5 @@ export interface IOrganization {
 
   name?: string;
 
-  location?: [number, number];
+  // location?: [number, number];
 }

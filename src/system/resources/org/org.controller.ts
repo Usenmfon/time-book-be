@@ -12,6 +12,7 @@ export class OrgController {
 
   @Get()
   async getOrg(@GetAuthUser() user: IAuthUser) {
+    console.log(user);
     return this.orgService.getOrg(user.id);
   }
 

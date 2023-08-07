@@ -18,12 +18,11 @@ export class RecordService {
   ) {}
 
   async getRecord(id: Types.ObjectId) {
-    // console.log(id)
     return this.RecordSchema.findOne({ user: id })
+      .sort({ createdAt: -1 })
       .then(async (record) => {
-        // console.log(record);
         if (!record) {
-          throw new ServiceException({ error: 'Record profile not found' });
+          throw new ServiceException({ error: 'Record not found' });
         }
         return record;
       })
@@ -33,8 +32,8 @@ export class RecordService {
   }
 
   async getAllRecords(id: Types.ObjectId) {
-    console.log(id);
     return this.RecordSchema.find({ org: id })
+      .populate([{ path: 'user', select: ['name'] }])
       .then(async (record) => {
         if (!record) {
           throw new ServiceException({ error: 'Records not found' });
@@ -46,6 +45,32 @@ export class RecordService {
       });
   }
 
+  async getAnalysis(id: Types.ObjectId) {
+    try {
+      const code = await this.OrgSchema.findById(id);
+
+      const users = await this.ProfileSchema.find({ org: id }).countDocuments();
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      const usersRecorded = await this.RecordSchema.find({
+        $and: [{ org: id }, { createdAt: { $gte: today, $lt: tomorrow } }],
+      }).countDocuments();
+
+      const data = {
+        totalUsers: users,
+        recordedToday: usersRecorded,
+        code: code.org_code,
+      };
+      return data;
+    } catch (e) {
+      throw new ServiceException({ error: parseDBError(e) });
+    }
+  }
+
   async createRecord(id: Types.ObjectId, dto) {
     try {
       const user = await this.ProfileSchema.findById(id)
@@ -53,37 +78,31 @@ export class RecordService {
         .catch((e) => {
           throw new ServiceException({ error: parseDBError(e) });
         });
-      // console.log(dto);
-      // console.log('user=>', user);
-      // const locaiton = user.org.location;
-      // const org = await this.OrgSchema.find({
-      //   location: {
-      //     $near: {
-      //       $geometry: {
-      //         type: 'Point',
-      //         coordinates: [dto.longitude, dto.latitude],
-      //       },
-      //       $minDistance: 1000,
-      //       $maxDistance: 5000,
-      //     },
-      //   },
-      // });
-      // console.log(org);
-      // const org = await this.OrgSchema.findById(a.org);
 
-      if (
-        user.org.location[0] === dto.longitude &&
-        user.org.location[1] === dto.latitude
-      ) {
+      const location = await this.OrgSchema.find({
+        location: {
+          $near: {
+            $maxDistance: 5000,
+            $minDistance: 1000,
+            $geometry: {
+              type: 'Point',
+              coordinates: [dto.longitude, dto.latitude],
+            },
+          },
+        },
+      });
+
+      if (location.length) {
         dto.org = user.org;
 
-        dto.sign_in = new Date();
+        dto.time_in = new Date();
         dto.user = id;
         const record = new this.RecordSchema({ ...dto });
         await record.save();
 
         return record;
       }
+
       throw new ServiceException({
         error: 'You are not currently in the organization',
       });
@@ -100,7 +119,7 @@ export class RecordService {
     tomorrow.setDate(today.getDate() + 1);
 
     dto.user = id;
-    dto.sign_out = new Date();
+    dto.time_out = new Date();
 
     return this.RecordSchema.findOneAndUpdate(
       {

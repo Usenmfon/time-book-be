@@ -37,8 +37,14 @@ export class OrgService {
       }
     });
 
-    await this.OrgSchema.collection.createIndex({ location: '2dsphere' });
+    dto.location = {
+      type: 'Point',
+      coordinates: [dto.longitude, dto.latitude],
+    };
 
+    // await this.OrgSchema.collection.createIndex({ location: '2dsphere' });
+    // console.log(dto);
+    // return;
     return this.OrgSchema.findOneAndUpdate({ _id: id }, dto, {
       new: true,
       upsert: true,

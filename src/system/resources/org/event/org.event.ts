@@ -13,7 +13,6 @@ export class OrgEventListener {
       org_code: org.org_code,
       latitude: org.latitude,
       longitude: org.longitude,
-      location: org.location,
       name: org.name,
     };
 

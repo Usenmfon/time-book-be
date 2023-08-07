@@ -45,7 +45,8 @@ export class AuthService {
           const orgObject = new NewOrgEvent();
           orgObject.org = {
             org_code: orgCode,
-            location: [dto.longitude, dto.latitude],
+            longitude: dto.longitude,
+            latitude: dto.latitude,
             user: user.id,
             name: user.name,
           };

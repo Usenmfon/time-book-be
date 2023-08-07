@@ -12,10 +12,10 @@ export class Record {
   org: Org;
 
   @Prop({ type: Date })
-  sign_in: Date;
+  time_in: Date;
 
   @Prop({ type: Date })
-  sign_out: Date;
+  time_out: Date;
 }
 
 export type RecordDocument = HydratedDocument<Record>;

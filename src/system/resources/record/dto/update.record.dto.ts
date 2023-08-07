@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsOptional } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class UpdateRecordDto {
@@ -10,9 +10,9 @@ export class UpdateRecordDto {
 
   @IsOptional()
   @IsDate()
-  sign_in: Date;
+  time_in: Date;
 
   @IsOptional()
   @IsDate()
-  sign_out: Date;
+  time_out: Date;
 }

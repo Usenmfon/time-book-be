@@ -17,9 +17,15 @@ export class Org {
   })
   name: string;
 
-  @Prop({ type: Array })
-  location: [number, number];
+  @Prop({ type: Object })
+  location: {
+    type: string;
+    coordinates: [number, number];
+  };
 }
 
 export type OrgDocument = HydratedDocument<Org>;
-export const OrgSchema = SchemaFactory.createForClass(Org);
+
+const OrgSchema = SchemaFactory.createForClass(Org);
+OrgSchema.index({ location: '2dsphere' });
+export { OrgSchema };
