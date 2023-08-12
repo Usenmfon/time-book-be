@@ -83,7 +83,6 @@ export class RecordService {
         location: {
           $near: {
             $maxDistance: 5000,
-            $minDistance: 1000,
             $geometry: {
               type: 'Point',
               coordinates: [dto.longitude, dto.latitude],
