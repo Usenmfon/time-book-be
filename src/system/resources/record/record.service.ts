@@ -94,7 +94,9 @@ export class RecordService {
       if (location.length) {
         dto.org = user.org;
 
-        dto.time_in = new Date();
+        const today = new Date();
+        dto.time_in = new Date(today.setHours(today.getHours() + 1));
+
         dto.user = id;
         const record = new this.RecordSchema({ ...dto });
         await record.save();
@@ -118,7 +120,8 @@ export class RecordService {
     tomorrow.setDate(today.getDate() + 1);
 
     dto.user = id;
-    dto.time_out = new Date();
+    const date = new Date();
+    dto.time_out = new Date(date.setHours(date.getHours() + 1));
 
     return this.RecordSchema.findOneAndUpdate(
       {
