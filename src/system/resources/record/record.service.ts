@@ -26,9 +26,25 @@ export class RecordService {
       $and: [
         { user: id },
         { createdAt: { $gte: startOfWeek, $lt: endOfWeek } },
-        { time_in: { $exists: true } },
       ],
     }).countDocuments();
+
+    // const l = await this.RecordSchema.aggregate([
+    //   {
+    //     $match: {
+    //       // user: id,
+    //       createdAt: { $gte: startOfWeek, $lt: endOfWeek },
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: null,
+    //       timeInCount: { $sum: '$time_in' },
+    //     },
+    //   },
+    // ]);
+
+    // console.log(l);
 
     const timeOutCount = await this.RecordSchema.find({
       $and: [
