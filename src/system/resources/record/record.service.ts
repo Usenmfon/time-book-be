@@ -4,7 +4,7 @@ import { Record, RecordDocument } from './schema/record.schema';
 import { Model, Types } from 'mongoose';
 import { UpdateRecordDto } from './dto';
 import { ServiceException } from 'src/helper/exceptions/exceptions/service.layer.exception';
-import { parseDBError } from 'src/helper/main';
+import { getStartAndEndOfWeek, parseDBError } from 'src/helper/main';
 import { Profile, ProfileDocument } from '../profile/schema/profile.schema';
 import { Org, OrgDocument } from '../org/schema/org.schema';
 
@@ -17,14 +17,39 @@ export class RecordService {
     @InjectModel(Org.name) private OrgSchema: Model<OrgDocument>,
   ) {}
 
+  // For users
   async getRecord(id: Types.ObjectId) {
-    return this.RecordSchema.findOne({ user: id })
+    const today = new Date();
+    const { startOfWeek, endOfWeek } = getStartAndEndOfWeek(today);
+
+    const timeInCount = await this.RecordSchema.find({
+      $and: [
+        { user: id },
+        { createdAt: { $gte: startOfWeek, $lt: endOfWeek } },
+        { time_in: { $exists: true } },
+      ],
+    }).countDocuments();
+
+    const timeOutCount = await this.RecordSchema.find({
+      $and: [
+        { user: id },
+        { createdAt: { $gte: startOfWeek, $lt: endOfWeek } },
+        { time_out: { $exists: true } },
+      ],
+    }).countDocuments();
+
+    const count = {
+      numberOfTimeIns: timeInCount,
+      numberOfTimeOuts: timeOutCount,
+    };
+    return this.RecordSchema.find({ user: id })
       .sort({ createdAt: -1 })
       .then(async (record) => {
         if (!record) {
           throw new ServiceException({ error: 'Record not found' });
         }
-        return record;
+
+        return [record, count];
       })
       .catch((e) => {
         throw new ServiceException({ error: parseDBError(e) });
