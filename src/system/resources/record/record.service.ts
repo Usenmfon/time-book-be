@@ -135,8 +135,7 @@ export class RecordService {
       if (location.length) {
         dto.org = user.org;
 
-        const today = new Date();
-        dto.time_in = new Date(today.setHours(today.getHours() + 1));
+        dto.time_in = new Date();
 
         dto.user = id;
         const record = new this.RecordSchema({ ...dto });
@@ -161,8 +160,7 @@ export class RecordService {
     tomorrow.setDate(today.getDate() + 1);
 
     dto.user = id;
-    const date = new Date();
-    dto.time_out = new Date(date.setHours(date.getHours() + 1));
+    dto.time_out = new Date();
 
     return this.RecordSchema.findOneAndUpdate(
       {
